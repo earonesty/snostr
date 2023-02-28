@@ -1,5 +1,15 @@
 selenium
 webdriver-manager
 pyyaml
-git+https://github.com/earonesty/python-nostr.git@windows-compat
+git+https://github.com/earonesty/python-nostr.git@snostr-compat
 requests
+
+pytest
+pytest-cov
+pytest-xdist
+
+build
+
+black
+pylint
+twine

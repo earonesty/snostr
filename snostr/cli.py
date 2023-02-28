@@ -18,8 +18,9 @@ def get_config():
 
     if config.debug:
         logging.getLogger().setLevel(logging.DEBUG)
+
         # too noisy
-        logging.getLogger("selenium").setLevel(logging.INFO)
+        logging.getLogger("selenium").setLevel(logging.WARNING)
         logging.getLogger("requests").setLevel(logging.INFO)
         logging.getLogger("urllib3").setLevel(logging.INFO)
 
@@ -33,10 +34,27 @@ def main():
         config.save_config()
         return
 
-    if config.twitter:
-        manager = Manager(config)
-        manager.auto_follow_twitter()
+    if config.self_test:
+        try:
+            manager = Manager(config)
+            manager.browser.get("https://www.google.com")
+        finally:
+            manager.browser.quit()
+        return
 
+    did = False
+
+    if config.twitter:
+        try:
+            manager = Manager(config)
+            manager.auto_follow_twitter()
+            manager.browser.quit()
+        finally:
+            manager.browser.quit()
+        did=True
+
+    if not did:
+        print("Nothing to do")
         
 if __name__ == "__main__":
     main()

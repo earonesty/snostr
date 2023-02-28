@@ -18,8 +18,9 @@ import requests
 
 from selenium import webdriver
 from selenium.webdriver import Keys
-from selenium.webdriver.chrome.options import Options
+
 from selenium.webdriver.common.by import By
+
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
 if TYPE_CHECKING:
@@ -135,13 +136,25 @@ class Manager:
         self.__browser = None
         self.__twitter_logged_in = False
 
+    @property
     def browser(self):
         if not self.__browser:
-            # todo, other drivers
-            from webdriver_manager.chrome import ChromeDriverManager
-            options = Options()
-            options.add_argument("--headless")
-            self.__browser = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=options)
+            if self.config.browser == "chrome":
+                # todo, other drivers
+                from webdriver_manager.chrome import ChromeDriverManager
+                from selenium.webdriver.chrome.service import Service as ChromeService
+                from selenium.webdriver.chrome.options import Options
+                options = Options()
+                options.headless=True
+                self.__browser = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+            if self.config.browser == "firefox":
+                 # todo, other drivers
+                from webdriver_manager.firefox import GeckoDriverManager
+                from selenium.webdriver.firefox.service import Service as FirefoxService
+                from selenium.webdriver.firefox.options import Options
+                options = Options()
+                options.headless=True
+                self.__browser = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
         return self.__browser
 
     def load_twitter_state(self):

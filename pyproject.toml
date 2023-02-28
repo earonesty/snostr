@@ -16,9 +16,11 @@ urls = { Homepage = "https://github.com/earonesty/snostr" }
 readme = "README.md"
 requires-python = ">=3.9.0"
 dependencies = [
-    "snscrape",
-    "pynostr",
+    "selenium",
+    "webdriver-manager",
     "pyyaml",
+    "nostr @ git+https://github.com/earonesty/python-nostr.git@snostr-compat",
+    "requests",
 ]
 license = {file = "LICENSE"}
 classifiers=[

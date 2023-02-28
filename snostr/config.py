@@ -1,17 +1,19 @@
 import json
 import os.path
 import yaml
-
+import argparse
 
 class Config:
     debug = False
     twitter: str = None
     npriv: str = None
     expire_days: float = 7
+    browser: str = "chrome"
 
     # saved keys
-    _saved = ("debug", "twitter", "npriv", "expire_days")
+    _saved = ("debug", "twitter", "npriv", "expire_days", "browser")
 
+    self_test = False
     prune_follows = True
     force_follows = False
     config_dir: str = "~/.config/snostr"
@@ -31,9 +33,12 @@ class Config:
         parser.add_argument("--twitter", "-t", help="Twitter username:password")
         parser.add_argument("--npriv", "-k", help="Nostr private key file")
         parser.add_argument("--debug", "-D", help="Debug mode", default=False, action="store_true")
-
+        parser.add_argument("--browser", "-B", help="Browser to use", choices=["chrome", "firefox"], default="chrome")
         parser.add_argument("--save", "-s", help="Save args from cli", action="store_true")
-        parser.add_argument("--show", help="Show config", action="store_true")
+        parser.add_argument("--expire-days", "-y", help="Number of days to invalidate cache", type=int)
+
+        # hidden arg
+        parser.add_argument("--self-test", help=argparse.SUPPRESS, action="store_true")
 
     def get_path(self, base=None):
         if not base:
