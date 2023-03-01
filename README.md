@@ -14,7 +14,8 @@
 
 ## Usage
 
-Ti
+Example usage line, type --help for more info.
+
 `snostr --twitter="user:pass" --npriv="nsec..." `
 
 
