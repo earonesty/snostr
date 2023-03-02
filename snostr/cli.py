@@ -21,11 +21,15 @@ def get_config():
     if config.debug:
         logging.getLogger().setLevel(logging.DEBUG)
 
-        # too noisy
-        logging.getLogger("selenium").setLevel(logging.WARNING)
-        logging.getLogger("requests").setLevel(logging.INFO)
-        logging.getLogger("urllib3").setLevel(logging.INFO)
-
+    else:
+        logging.getLogger().setLevel(logging.INFO)
+    
+    # too noisy
+    logging.getLogger("selenium").setLevel(logging.WARNING)
+    logging.getLogger("requests").setLevel(logging.INFO)
+    logging.getLogger("websocket").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.INFO)
+    
     return config
 
 
