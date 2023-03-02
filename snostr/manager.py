@@ -153,6 +153,7 @@ class Manager:
                 from selenium.webdriver.chrome.options import Options
                 options = Options()
                 options.headless=True
+                options.add_argument('--log-level=3')
                 self.__browser = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
             if self.config.browser == "firefox":
                  # todo, other drivers
@@ -160,6 +161,7 @@ class Manager:
                 from selenium.webdriver.firefox.service import Service as FirefoxService
                 from selenium.webdriver.firefox.options import Options
                 options = Options()
+                options.log.level = "FATAL"
                 options.headless=True
                 self.__browser = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
         return self.__browser
@@ -170,7 +172,7 @@ class Manager:
     def twitter_login(self):
         if self.__twitter_logged_in:
             return
-        log.debug("logging in to twitter to get followers")
+        log.info("Logging in to twitter to get followers")
         self.browser.get("https://twitter.com/login")
         time.sleep(random.uniform(0.5, 2))
         inp = self.wait_for(lambda: self.browser.find_element(By.XPATH, "//input[@autocomplete='username']"), 5)
@@ -295,6 +297,8 @@ class Manager:
                     break
             else:
                 nothing = 0
+            if i % 5 == 0:
+                log.info("Scrolled %s times, found %s follows", i, len(res))
             log.debug("scrolling")
             self.browser.execute_script("window.scrollTo(0,document.body.scrollHeight)")
             time.sleep(random.uniform(1, 2))
