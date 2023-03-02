@@ -78,7 +78,7 @@ class Nostr:
 
     def close(self):
         self.relay.close_subscription_on_all_relays(self.prof_sub)
-        time.sleep(2)
+        time.sleep(1)
         self.relay.close_all_relay_connections()
 
     def follow_hex(self, hex_pub):
@@ -135,6 +135,13 @@ class Manager:
         self.nostr = Nostr(self.config)
         self.__browser = None
         self.__twitter_logged_in = False
+
+    def close(self):
+        if self.__browser:
+            self.__browser.quit()
+
+        if self.nostr:
+            self.nostr.close()
 
     @property
     def browser(self):

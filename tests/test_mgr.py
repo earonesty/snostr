@@ -16,4 +16,5 @@ def test_nostr_connect():
     conf = Config.from_args({"config_dir": "~/.config/snostr"})
     nostr = Nostr(conf)
     nostr.connect()
+    nostr.get_contacts()
     assert len(nostr.contacts) > 20

@@ -4,6 +4,8 @@ import logging
 from snostr.config import Config
 from snostr.manager import Manager
 
+log = logging.getLogger("snostr")
+
 def get_config():
     parser = argparse.ArgumentParser(
         prog = 'snostr',
@@ -39,7 +41,7 @@ def main():
             manager = Manager(config)
             manager.browser.get("https://www.google.com")
         finally:
-            manager.browser.quit()
+            manager.close()
         return
 
     did = False
@@ -48,9 +50,10 @@ def main():
         try:
             manager = Manager(config)
             manager.auto_follow_twitter()
-            manager.browser.quit()
+            log.debug("done auto follow twitter")
         finally:
-            manager.browser.quit()
+            log.debug("quit browser")
+            manager.close()
         did=True
 
     if not did:
