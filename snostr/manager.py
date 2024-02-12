@@ -1,5 +1,4 @@
 import queue
-import random
 import re
 import threading
 import time
@@ -22,6 +21,7 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+import secrets
 
 if TYPE_CHECKING:
     from snostr.config import Config
@@ -174,7 +174,7 @@ class Manager:
             return
         log.info("Logging in to twitter to get followers")
         self.browser.get("https://twitter.com/login")
-        time.sleep(random.uniform(0.5, 2))
+        time.sleep(secrets.SystemRandom().uniform(0.5, 2))
         inp = self.wait_for(lambda: self.browser.find_element(By.XPATH, "//input[@autocomplete='username']"), 5)
         assert inp, "no login form found"
         next_button = self.browser.find_element(By.XPATH, "//span[text()[contains(.,'Next')]]")
@@ -184,11 +184,11 @@ class Manager:
         pwd = self.wait_for(lambda: self.browser.find_element(By.XPATH, "//input[@type='password']"), 2)
         assert pwd, "no password input found"
         pwd.send_keys(self.config.twitter_password)
-        time.sleep(random.uniform(0.1, 0.25))
+        time.sleep(secrets.SystemRandom().uniform(0.1, 0.25))
         pwd.send_keys(Keys.ENTER)
         assert self.wait_for(lambda: not self.browser.find_element(By.XPATH, "//input[@type='password']"), 5,
                              invert=True)
-        time.sleep(random.uniform(0.1, 0.25))
+        time.sleep(secrets.SystemRandom().uniform(0.1, 0.25))
         log.debug("login worked")
         self.__twitter_logged_in = True
 
@@ -258,10 +258,10 @@ class Manager:
         return self.twitter_state["follows"]
 
     def scrape_twitter_following(self):
-        time.sleep(random.uniform(1, 2))
+        time.sleep(secrets.SystemRandom().uniform(1, 2))
         log.debug("getting follows")
         self.browser.get("https://twitter.com/" + self.config.twitter_user + "/following")
-        time.sleep(random.uniform(2, 3))
+        time.sleep(secrets.SystemRandom().uniform(2, 3))
         i = 0
         # max pages 1000
         res = set()
@@ -270,7 +270,7 @@ class Manager:
             try:
                 txts = self.get_all_text(By.TAG_NAME, "a")
             except StaleElementReferenceException:
-                time.sleep(random.uniform(1, 2))
+                time.sleep(secrets.SystemRandom().uniform(1, 2))
                 txts = self.get_all_text(By.TAG_NAME, "a")
             new_res = 0
             for foll in txts:
@@ -301,13 +301,13 @@ class Manager:
                 log.info("Scrolled %s times, found %s follows", i, len(res))
             log.debug("scrolling")
             self.browser.execute_script("window.scrollTo(0,document.body.scrollHeight)")
-            time.sleep(random.uniform(1, 2))
+            time.sleep(secrets.SystemRandom().uniform(1, 2))
         return res
 
     def scrape_twitter_bio(self, follower: str) -> Optional[str]:
         log.debug("getting bio for %s", follower)
         self.browser.get("https://twitter.com/" + follower)
-        time.sleep(random.uniform(1, 2))
+        time.sleep(secrets.SystemRandom().uniform(1, 2))
 
         txts = self.get_all_text(By.TAG_NAME, "span")
 
@@ -384,7 +384,7 @@ class Manager:
         try:
             return [link.text for link in self.browser.find_elements(by, arg)]
         except StaleElementReferenceException:
-            time.sleep(random.uniform(1, 2))
+            time.sleep(secrets.SystemRandom().uniform(1, 2))
             return [link.text for link in self.browser.find_elements(by, arg)]
 
     def twitter_state_has_follower(self, follower):
