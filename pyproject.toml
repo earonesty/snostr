@@ -21,6 +21,7 @@ dependencies = [
     "pyyaml",
     "nostr @ git+https://github.com/earonesty/python-nostr.git@snostr-compat",
     "requests",
+    "security~=1.2.0",
 ]
 license = {file = "LICENSE"}
 classifiers=[
