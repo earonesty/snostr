@@ -1,6 +1,4 @@
-import queue
 import re
-import threading
 import time
 import json
 import uuid
@@ -22,6 +20,7 @@ from selenium.webdriver.common.by import By
 
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 import secrets
+from security import safe_requests
 
 if TYPE_CHECKING:
     from snostr.config import Config
@@ -346,7 +345,7 @@ class Manager:
             return None
         log.debug("try nip5 for %s", maybe)
         try:
-            res = requests.get(f"https://{base}/.well-known/nostr.json?name={name}", timeout=2)
+            res = safe_requests.get(f"https://{base}/.well-known/nostr.json?name={name}", timeout=2)
         except requests.RequestException:
             return None
         if res.status_code != 200:
